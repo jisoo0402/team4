@@ -5,22 +5,45 @@
   <title>리뷰 목록 - Ewha Market</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
   {% include 'navbar.html' %}
+
   <div class="container fade">
-    <h2>리뷰 목록</h2>
+    <h2>전체 리뷰 목록</h2>
+    <p style="color:var(--muted); margin-bottom:25px;">등록된 모든 리뷰를 확인할 수 있습니다 🌿</p>
 
-    <div class="card review-item" onclick="location.href='/review/detail'">
-      <h3>🎀 카페 디저트보다 맛있어요!</h3>
-      <p>너무 맛있어요! 가족, 지인 선물용으로 샀는데 다들 맛있다고 했어요!! 
-가격 대비 비싼 감이 없지 않지만 가끔씩 선물용으로 사면 좋을 것 같아요!</p>
-      <p style="color:var(--muted); font-size:14px;">작성자: 이화인123 · 평점: ★★★★★</p>
-    </div>
+    {% if reviews and reviews|length > 0 %}
+      {% for r in reviews|reverse %}
+      <div class="card review-item" onclick="location.href='/review/detail/{{ loop.index0 }}'">
+        <div style="display:flex; align-items:center; gap:20px;">
+          {% if r.image %}
+          <img src="{{ url_for('static', filename='image/' + r.image) }}"
+               style="width:120px; height:120px; object-fit:cover; border-radius:8px;">
+          {% endif %}
+          <div>
+            <h3>{{ r.title }}</h3>
+            <p style="color:var(--muted); font-size:14px;">{{ r.product }}</p>
+            <p>{{ r.content[:100] }}...</p>
+            <p style="color:var(--muted); font-size:13px;">
+              평점: 
+              {% if r.rating == '5' %}★★★★★
+              {% elif r.rating == '4' %}★★★★☆
+              {% elif r.rating == '3' %}★★★☆☆
+              {% elif r.rating == '2' %}★★☆☆☆
+              {% else %}★☆☆☆☆{% endif %}
+              | 작성자: {{ r.name }}
+            </p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <p>등록된 리뷰가 없습니다.</p>
+    {% endif %}
 
-    <div class="card review-item" onclick="location.href='/review/detail'">
-      <h3>💚 귀여움 한도 초과!</h3>
-      <p>실리콘 재질 부드럽고 로고 각인이 예뻐요.</p>
-      <p style="color:var(--muted); font-size:14px;">작성자: ewha_shop · 평점: ★★★★☆</p>
+    <div style="text-align:center; margin-top:30px;">
+      <a href="/review/write" class="btn">리뷰 작성하기</a>
     </div>
   </div>
 

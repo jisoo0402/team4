@@ -5,43 +5,63 @@
   <title>상품 조회 - Ewha Market</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
   {% include 'navbar.html' %}
 
-  <div class="container">
+  <div class="container fade">
     <h2>상품 조회</h2>
 
     <section class="grid">
-
-      <!-- 1. 이화그린5색펜세트 -->
+      <!-- 🔸 기본 상품 -->
       <article class="card prod" onclick="location.href='/detail/pen'">
         <img src="{{ url_for('static', filename='image/이화그린5색펜세트.jpg') }}" alt="이화그린5색펜세트">
         <div class="name">이화상점 이화그린5색펜세트</div>
         <div class="price">₩10,000</div>
       </article>
 
-      <!-- 2. 배꽃마들렌 -->
       <article class="card prod" onclick="location.href='/detail/madeline'">
         <img src="{{ url_for('static', filename='image/배꽃마들렌.jpg') }}" alt="배꽃마들렌">
         <div class="name">배꽃마들렌 6입 쿠키2입세트</div>
         <div class="price">₩15,000</div>
       </article>
 
-      <!-- 3. 이화버즈 -->
       <article class="card prod" onclick="location.href='/detail/buds'">
         <img src="{{ url_for('static', filename='image/이화버즈.jpg') }}" alt="이화버즈">
         <div class="name">이화컬렉션 버즈케이스</div>
         <div class="price">₩20,000</div>
       </article>
 
-      <!-- 4. 봄가을야구점퍼 -->
       <article class="card prod" onclick="location.href='/detail/jumper'">
         <img src="{{ url_for('static', filename='image/봄가을야구점퍼.jpg') }}" alt="봄가을야구점퍼">
         <div class="name">이화야구점퍼</div>
         <div class="price">₩50,000</div>
       </article>
 
+      <!-- 🔹 사용자가 등록한 상품 -->
+      {% if products and products|length > 0 %}
+        {% for p in products %}
+        <article class="card prod">
+          <img src="{{ url_for('static', filename='image/' + p.image) }}" alt="{{ p.name }}">
+          <div class="name">{{ p.name }}</div>
+          <div class="price">₩{{ p.price }}</div>
+          <p style="color:var(--muted); font-size:14px;">{{ p.desc }}</p>
+          <p style="font-size:13px; color:var(--muted);">
+            판매자: {{ p.seller }}<br>
+            지역: {{ p.location }}<br>
+            상태: {{ p.condition }}
+          </p>
+          <form action="/delete/{{ loop.index0 }}" method="POST" style="margin-top:10px;">
+            <button type="submit" class="btn-small" style="background-color:#c0392b;">삭제</button>
+          </form>
+        </article>
+        {% endfor %}
+      {% endif %}
     </section>
+
+    <div style="text-align:center; margin-top:25px;">
+      <a href="/register" class="btn">상품 등록하기</a>
+    </div>
   </div>
 
   <script src="{{ url_for('static', filename='main.js') }}"></script>
