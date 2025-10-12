@@ -1,0 +1,300 @@
+/* ===================================
+   Ewha Market 디자인 스타일
+   (라이트 / 다크모드 통합)
+=================================== */
+
+:root {
+  --bg: #f8f8f8;
+  --text: #1f1f1f;
+  --muted: #555;
+  --nav-bg: #1f3b2c;
+  --nav-text: #ffffff;
+  --card: #ffffff;
+  --border: #ddd;
+  --button: #1f3b2c;
+  --button-hover: #284a36;
+  --accent: #2b694b;
+}
+
+[data-theme="dark"] {
+  --bg: #1f1f1f;
+  --text: #e8e8e8;
+  --muted: #aaaaaa;
+  --nav-bg: #235f3e;
+  --nav-text: #ffffff;
+  --card: #2b2b2b;
+  --border: #3a3a3a;
+  --button: #2e7a4b;
+  --button-hover: #359058;
+  --accent: #49a36e;
+}
+
+/* ----------------------------
+   기본 구조
+----------------------------- */
+body {
+  margin: 0;
+  font-family: "Noto Sans KR", sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+a {
+  color: var(--text);
+  text-decoration: none;
+}
+
+h2 {
+  font-size: 22px;
+  margin-top: 30px;
+  font-weight: 700;
+}
+
+/* ----------------------------
+   네비게이션 바
+----------------------------- */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--nav-bg);
+  color: var(--nav-text);
+  padding: 14px 30px;
+}
+
+.logo {
+  font-size: 22px;
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+nav a {
+  color: var(--nav-text);
+  margin-left: 24px;
+  font-weight: 500;
+}
+
+.btn-dark {
+  margin-left: 24px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.3);
+  color: var(--nav-text);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-dark:hover {
+  background-color: rgba(255,255,255,0.1);
+}
+
+/* ----------------------------
+   버튼
+----------------------------- */
+.btn {
+  display: inline-block;
+  background-color: var(--button);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+  text-align: center;
+}
+
+.btn:hover {
+  background-color: var(--button-hover);
+}
+
+/* ----------------------------
+   카드
+----------------------------- */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* ----------------------------
+   입력창
+----------------------------- */
+input, select, textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--text);
+  font-size: 15px;
+}
+
+textarea {
+  height: 130px;
+  resize: none;
+}
+
+/* ----------------------------
+   페이지 컨테이너
+----------------------------- */
+.container {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+/* ----------------------------
+   상품 리스트
+----------------------------- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 24px;
+}
+
+.prod img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: transform 0.2s;
+}
+
+.prod img:hover {
+  transform: scale(1.03);
+}
+
+.prod .name {
+  font-weight: 500;
+  margin-top: 8px;
+}
+
+.prod .price {
+  font-weight: 800;
+  margin-top: 4px;
+}
+
+/* ----------------------------
+   상세 페이지
+----------------------------- */
+.detail {
+  display: grid;
+  grid-template-columns: 460px 1fr;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+.detail h2 {
+  margin-top: 0;
+}
+
+/* ----------------------------
+   로그인 / 회원가입
+----------------------------- */
+.form-box {
+  max-width: 480px;
+  margin: 60px auto;
+}
+
+/* ----------------------------
+   리뷰 목록 / 상세
+----------------------------- */
+.review-item:hover {
+  border-color: var(--accent);
+  cursor: pointer;
+}
+
+/* ----------------------------
+   이미지 업로드 버튼
+----------------------------- */
+input[type="file"] {
+  border: none;
+  padding: 6px;
+  background: var(--card);
+  color: var(--text);
+}
+
+/* ----------------------------
+   애니메이션
+----------------------------- */
+.fade {
+  transition: opacity 0.3s;
+}
+/* ----------------------------
+   상품 등록 폼 세부 스타일
+----------------------------- */
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-section label {
+  font-weight: 600;
+  margin-top: 8px;
+  color: var(--text);
+}
+
+input[type="text"], select, textarea {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  color: var(--text);
+}
+
+input[type="file"] {
+  background-color: var(--card);
+  color: var(--muted);
+  padding: 6px;
+}
+
+form.card {
+  padding: 30px 40px;
+  border-radius: 12px;
+}
+
+.btn-small {
+  padding: 6px 12px;
+  border-radius: 6px;
+  background-color: var(--button);
+  color: white;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.btn-small:hover {
+  background-color: var(--button-hover);
+}
+/* ----------------------------
+   로그인 폼
+----------------------------- */
+.form-box {
+  max-width: 420px;
+  margin: 60px auto;
+  padding: 30px 40px;
+  border-radius: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.form-box h2 {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.form-box input {
+  margin-top: 8px;
+}
+
+.form-box .btn {
+  width: 100%;
+}

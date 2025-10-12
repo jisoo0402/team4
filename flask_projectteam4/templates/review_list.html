@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>리뷰 목록 - Ewha Market</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  {% include 'navbar.html' %}
+  <div class="container fade">
+    <h2>리뷰 목록</h2>
+
+    <div class="card review-item" onclick="location.href='/review/detail'">
+      <h3>🎀 카페 디저트보다 맛있어요!</h3>
+      <p>너무 맛있어요! 가족, 지인 선물용으로 샀는데 다들 맛있다고 했어요!! 
+가격 대비 비싼 감이 없지 않지만 가끔씩 선물용으로 사면 좋을 것 같아요!</p>
+      <p style="color:var(--muted); font-size:14px;">작성자: 이화인123 · 평점: ★★★★★</p>
+    </div>
+
+    <div class="card review-item" onclick="location.href='/review/detail'">
+      <h3>💚 귀여움 한도 초과!</h3>
+      <p>실리콘 재질 부드럽고 로고 각인이 예뻐요.</p>
+      <p style="color:var(--muted); font-size:14px;">작성자: ewha_shop · 평점: ★★★★☆</p>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>

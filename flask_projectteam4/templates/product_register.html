@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>상품 등록 - Ewha Market</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  {% include 'navbar.html' %}
+
+  <div class="container fade">
+    <h2>상품 등록</h2>
+    <p style="color:var(--muted); margin-bottom:25px;">
+      판매할 상품 정보를 입력해주세요 🌿
+    </p>
+
+    <form class="card" onsubmit="event.preventDefault(); alert('상품이 등록되었습니다!');">
+      <div class="form-section">
+        <label>상품 이미지</label>
+        <input type="file" id="upload" accept="image/*">
+
+        <label>판매자 아이디</label>
+        <input type="text" placeholder="예: ewha_seller01">
+
+        <label>상품명</label>
+        <input type="text" placeholder="예: 이화그린5색펜세트">
+
+        <label>지역</label>
+        <input type="text" placeholder="예: 서울특별시 서대문구 이화여대길 52">
+
+        <label>카테고리</label>
+        <select>
+          <option>문구</option>
+          <option>의류</option>
+          <option>잡화</option>
+          <option>디지털</option>
+        </select>
+
+        <label>가격</label>
+        <input type="text" placeholder="₩ 10,000">
+
+        <label>상품 상태</label>
+        <select>
+          <option>새상품 (미사용)</option>
+          <option>중고상품</option>
+        </select>
+
+        <label>상품 설명</label>
+        <textarea placeholder="상품의 특징, 사용감 등을 자세히 입력해주세요."></textarea>
+      </div>
+
+      <div style="text-align:center; margin-top:25px;">
+        <button type="submit" class="btn" style="width:200px;">등록하기</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>

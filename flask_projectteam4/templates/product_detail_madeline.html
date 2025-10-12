@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>배꽃마들렌 상세 - Ewha Market</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  {% include 'navbar.html' %}
+
+  <div class="container">
+    <div class="detail">
+      <div>
+        <img src="{{ url_for('static', filename='image/배꽃마들렌.jpg') }}" alt="배꽃마들렌" style="width:100%; border-radius:10px;">
+      </div>
+
+      <div>
+        <h2>배꽃마들렌 6입 쿠키2입 세트</h2>
+        <p style="font-size:20px; font-weight:700;">₩15,000</p>
+        <button class="btn">구매하기</button>
+
+        <div class="card" style="margin-top:20px;">
+          <h3>상품 설명</h3>
+          <p>
+            가게 디저트보다 맛있어요!<br>
+            선물용으로도 너무 좋아요.<br>
+            진한 녹차 향이 나면서 부드럽고 달지 않아요.<br>
+            포장도 예뻐서 선물용으로 추천합니다 🎁
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>

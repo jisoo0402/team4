@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Ewha Market</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+  <header class="navbar">
+    <div class="logo">Ewha<br>Market</div>
+    <nav>
+      <a href="/">홈</a>
+      <button id="darkToggle" class="btn-dark">다크 모드</button>
+    </nav>
+  </header>
+
+ <div class="container">
+  <h2>이화마켓에 오신 것을 환영합니다 🌿</h2>
+  <p>이화여대 학생들을 위한 교내 거래 플랫폼입니다.</p>
+
+  <div class="card">
+    <p>지금 바로 상품을 등록하거나, 다른 학생들의 상품을 구경해보세요!</p>
+    <a href="/list" class="btn">상품 보러가기</a>
+  </div>
+</div>
+
+
+  <script>
+    // 🌙 다크모드 스크립트
+    function applyTheme(theme) {
+      document.body.setAttribute("data-theme", theme);
+      const btn = document.getElementById("darkToggle");
+      if (btn) btn.textContent = theme === "dark" ? "라이트 모드" : "다크 모드";
+    }
+
+    function toggleTheme() {
+      const theme = document.body.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      localStorage.setItem("theme", theme);
+      applyTheme(theme);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const saved = localStorage.getItem("theme") || "light";
+      applyTheme(saved);
+      const btn = document.getElementById("darkToggle");
+      if (btn) btn.addEventListener("click", toggleTheme);
+    });
+  </script>
+</body>
+</html>

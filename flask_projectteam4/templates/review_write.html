@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>리뷰 작성 - Ewha Market</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+  {% include 'navbar.html' %}
+  <div class="container">
+    <h2>리뷰 작성하기</h2>
+    <form class="card" onsubmit="event.preventDefault(); alert('리뷰 등록 완료!')">
+      <label>제목</label>
+      <input type="text" placeholder="예: 카페 디저트보다 맛있어요!!">
+
+      <label>상품명</label>
+      <input type="text" placeholder="예: 벚꽃마들렌 6입 쿠키세트">
+
+      <label>별점</label>
+      <select>
+        <option>★★★★★</option>
+        <option>★★★★☆</option>
+        <option>★★★☆☆</option>
+      </select>
+
+      <label>상품 이미지</label>
+      <input type="file">
+
+      <label>리뷰 내용</label>
+      <textarea placeholder="상품에 대한 솔직한 후기를 작성해주세요."></textarea>
+
+      <button type="submit" class="btn" style="margin-top:15px;">등록하기</button>
+    </form>
+  </div>
+
+  <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>
