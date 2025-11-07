@@ -10,10 +10,17 @@
   {% include 'navbar.html' %}
 
   <div class="container fade">
-    <h2>상품 조회</h2>
+
+    <!-- 상단 제목 + 버튼 같은 줄 -->
+    <div class="page-head">
+      <h2>상품 조회</h2>
+      <div class="page-actions">
+        <a href="/register" class="btn">+ 상품 등록</a>
+      </div>
+    </div>
 
     <section class="grid">
-      <!-- 기본 상품 -->
+      <!-- 🔸 기본 상품 -->
       <article class="card prod" onclick="location.href='/detail/pen'">
         <img src="{{ url_for('static', filename='image/이화그린5색펜세트.jpg') }}" alt="이화그린5색펜세트">
         <div class="name">이화상점 이화그린5색펜세트</div>
@@ -38,7 +45,7 @@
         <div class="price">₩50,000</div>
       </article>
 
-      <!-- 사용자가 등록한 상품 -->
+      <!-- 🔹 사용자가 등록한 상품 -->
       {% if products and products|length > 0 %}
         {% for p in products %}
         <article class="card prod">
@@ -59,9 +66,6 @@
       {% endif %}
     </section>
 
-    <div style="text-align:center; margin-top:25px;">
-      <a href="/register" class="btn">상품 등록하기</a>
-    </div>
   </div>
 
   <script src="{{ url_for('static', filename='main.js') }}"></script>

@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, session, request, flash
 import os
+import hashlib
 
 app = Flask(__name__)
 app.secret_key = "ewhamarket_secret"
@@ -54,12 +55,12 @@ def product_register():
 
         print(f"[상품 등록됨] {name}, {price}")
 
-        image_filename = None
-        if image and image.filename != '':
+        image_filename = "default.png"
+        if image and image.filename:
             image_filename = image.filename
-            image.save(os.path.join('static', 'image', image_filename))
-        else:
-            image_filename = "default.png"
+            save_dir = os.path.join('static', 'image')
+            os.makedirs(save_dir, exist_ok=True)
+            image.save(os.path.join(save_dir, image_filename))
 
         products.append({
             "seller": seller,
@@ -76,7 +77,24 @@ def product_register():
         return redirect(url_for('product_list'))
 
     return render_template('product_register.html', logged_in=session.get("logged_in", False))
-#  상품 상세 페이지 각각 연결
+
+# 상품 목록
+@app.route('/list')
+def product_list():
+    return render_template('product_list.html', products=products, logged_in=session.get("logged_in", False))
+
+# 상품 삭제
+@app.route('/delete/<int:index>', methods=['POST'])
+def delete_product(index):
+    if 0 <= index < len(products):
+        deleted_item = products.pop(index)
+        print(f"[상품 삭제됨] {deleted_item['name']}")
+        flash(f"'{deleted_item['name']}' 상품이 삭제되었습니다.")
+    else:
+        flash("해당 상품을 찾을 수 없습니다.")
+    return redirect(url_for('product_list'))
+
+# 고정 상세(정적 템플릿 사용)
 @app.route('/detail/pen')
 def detail_pen():
     return render_template('product_detail_pen.html', logged_in=session.get("logged_in", False))
@@ -93,67 +111,18 @@ def detail_buds():
 def detail_jumper():
     return render_template('product_detail_jumper.html', logged_in=session.get("logged_in", False))
 
-#  상품 목록
-@app.route('/list')
-def product_list():
-    return render_template('product_list.html', products=products, logged_in=session.get("logged_in", False))
-
-#  상품 삭제
-@app.route('/delete/<int:index>', methods=['POST'])
-def delete_product(index):
-    if 0 <= index < len(products):
-        deleted_item = products.pop(index)
-        print(f"[상품 삭제됨] {deleted_item['name']}")
-        flash(f"'{deleted_item['name']}' 상품이 삭제되었습니다.")
-    else:
-        flash("해당 상품을 찾을 수 없습니다.")
-    return redirect(url_for('product_list'))
-
-#  상품 상세 보기 (고정 상품 + 등록 상품)
+# 동적 상세(등록 상품용, 이름으로 매칭)
 @app.route('/detail/<item>')
 def product_detail(item):
-    # 고정 상품
-    if item == "pen":
-        product = {
-            "name": "이화그린5색펜세트",
-            "price": "₩10,000",
-            "desc": "이화 상징 색상을 담은 5색 펜 세트입니다.",
-            "image": "이화그린5색펜세트.jpg"
-        }
-    elif item == "madeline":
-        product = {
-            "name": "배꽃마들렌 6입 쿠키2입세트",
-            "price": "₩15,000",
-            "desc": "이화의 상징 배꽃을 모티브로 한 고급 디저트 세트입니다.",
-            "image": "배꽃마들렌.jpg"
-        }
-    elif item == "buds":
-        product = {
-            "name": "이화컬렉션 버즈케이스",
-            "price": "₩20,000",
-            "desc": "로고 각인 디자인이 돋보이는 실리콘 버즈 케이스.",
-            "image": "이화버즈.jpg"
-        }
-    elif item == "jumper":
-        product = {
-            "name": "이화야구점퍼",
-            "price": "₩50,000",
-            "desc": "봄·가을에 입기 좋은 야구 점퍼, 이화 로고가 포인트!",
-            "image": "봄가을야구점퍼.jpg"
-        }
-    else:
-        for p in products:
-            if p["name"] == item:
-                product = p
-                break
-        else:
-            flash("해당 상품을 찾을 수 없습니다.")
-            return redirect(url_for('product_list'))
-
-    return render_template('product_detail.html', product=product, logged_in=session.get("logged_in", False))
+    # 먼저 고정 상품 키워드는 위 정적 라우트로 처리되므로 여기서는 등록상품만 탐색
+    for p in products:
+        if p["name"] == item:
+            return render_template('product_detail.html', product=p, logged_in=session.get("logged_in", False))
+    flash("해당 상품을 찾을 수 없습니다.")
+    return redirect(url_for('product_list'))
 
 # --------------------------------
-# 리뷰 기능
+# 리뷰
 # --------------------------------
 @app.route('/review')
 @app.route('/review/write')
@@ -171,9 +140,11 @@ def review_submit():
     image = request.files.get('image')
 
     image_filename = None
-    if image and image.filename != '':
+    if image and image.filename:
         image_filename = image.filename
-        image.save(os.path.join('static', 'image', image_filename))
+        save_dir = os.path.join('static', 'image')
+        os.makedirs(save_dir, exist_ok=True)
+        image.save(os.path.join(save_dir, image_filename))
 
     reviews.append({
         "name": name,
@@ -194,11 +165,32 @@ def review_list():
 @app.route('/review/detail/<int:index>')
 def review_detail(index):
     if 0 <= index < len(reviews):
-        review = reviews[index]
-        return render_template('review_detail.html', review=review, logged_in=session.get("logged_in", False))
-    else:
-        flash("해당 리뷰를 찾을 수 없습니다.")
-        return redirect(url_for('review_list'))
+        return render_template('review_detail.html', review=reviews[index], logged_in=session.get("logged_in", False))
+    flash("해당 리뷰를 찾을 수 없습니다.")
+    return redirect(url_for('review_list'))
+
+# --------------------------------
+# 회원가입
+# --------------------------------
+@app.route("/signup", methods=["GET"])
+def signup():
+    return render_template("signup.html", logged_in=session.get("logged_in", False))
+
+@app.route("/signup_post", methods=["POST"])
+def signup_post():
+    user_id = request.form.get("id","").strip()
+    pw = request.form.get("pw","").strip()
+    nickname = request.form.get("nickname","").strip()
+
+    if not user_id or not pw or not nickname:
+        flash("필수 항목을 모두 입력하세요.")
+        return redirect(url_for("signup"))
+
+    pw_hash = hashlib.sha256(pw.encode("utf-8")).hexdigest()
+    print(f"[회원가입] id={user_id}, nickname={nickname}, pw_hash={pw_hash[:10]}...")
+
+    flash("회원가입 완료! 로그인해주세요.")
+    return redirect(url_for("login"))
 
 # --------------------------------
 # 로그인 / 로그아웃
@@ -206,19 +198,26 @@ def review_detail(index):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        user_id = request.form['userid']
-        user_pw = request.form['password']
+        user_id = request.form.get('userid', '')
+        user_pw = request.form.get('password', '')
 
         if user_id == USER_ID and user_pw == USER_PW:
             session['logged_in'] = True
             session['user_id'] = user_id
-            flash('로그인 성공!')
-            return redirect(url_for('index'))
+            return """
+                <script>
+                  alert('로그인 성공! 환영합니다 🌿');
+                  window.location.href = '/';
+                </script>
+            """
         else:
-            flash('아이디 또는 비밀번호가 올바르지 않습니다.')
-            return redirect(url_for('login'))
-    else:
-        return render_template('login.html', logged_in=session.get("logged_in", False))
+            return """
+                <script>
+                  alert('아이디 또는 비밀번호가 올바르지 않습니다.');
+                  window.location.href = '/login';
+                </script>
+            """
+    return render_template('login.html', logged_in=session.get("logged_in", False))
 
 @app.route('/logout')
 def logout():

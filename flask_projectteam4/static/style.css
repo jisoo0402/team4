@@ -69,10 +69,24 @@ h2 {
   font-weight: 800;
 }
 
-nav a {
+
+
+nav a,
+nav button {
   color: var(--nav-text);
-  margin-left: 24px;
   font-weight: 500;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease; 
+}
+
+nav a:hover,
+nav button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .btn-dark {
@@ -297,4 +311,16 @@ form.card {
 
 .form-box .btn {
   width: 100%;
+}
+.page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.page-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
