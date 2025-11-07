@@ -1,8 +1,11 @@
 from flask import Flask, render_template, redirect, url_for, session, request, flash
+from database import DBhandler
 import os
 
 app = Flask(__name__)
 app.secret_key = "ewhamarket_secret"
+
+DB = DBhandler()
 
 USER_ID = "ewha"
 USER_PW = "1234"
@@ -60,6 +63,9 @@ def product_register():
             image.save(os.path.join('static', 'image', image_filename))
         else:
             image_filename = "default.png"
+
+        data = request.form    
+        DB.insert_item(data['name'], data, image_filename)
 
         products.append({
             "seller": seller,
