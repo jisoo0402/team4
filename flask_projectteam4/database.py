@@ -28,3 +28,54 @@ class DBhandler:
             self.db.child("item").child(name).set(item_info)
             print(data, img_path)
             return True
+    
+    #데이터베이스에 사용자 가입 데이터 넘기기
+    def insert_user(self, data, pw):
+         user_info={
+              "id":data['id'],
+              "pw":pw,
+              "email":data['email'],
+              "nickname":data['nickname']
+         }
+         if self.user_duplicate_check(str(data['id'])):
+              self.db.child("user").child(data['id']).set(user_info)
+              print(data)
+              return True
+         else:
+              return False
+    
+    #아이디 중복 체크
+    def user_duplicate_check(self, id_string):
+        users=self.db.child("user").get()
+        print("users###", users.val())
+        if users.val() is None: return True
+        else:
+            for res in users.each():
+                value=res.val()
+                if value['id'] == id_string:
+                     return False
+            return True
+    
+    #사용자 정보 받기
+    def get_user(self, id_string):
+        users=self.db.child("user").get()
+        if not users.val():
+            return None
+        for res in users.each():
+            value=res.val()
+            if value['id']==id_string:
+                return value
+        return None
+
+    #로그인할 때 데이터베이스에 있는 계정인지 찾기
+    def find_user(self, id, pw):
+        users=self.db.child("user").get()
+        target_value=[]
+
+        if not users.val():
+            return False
+        for res in users.each():
+            value=res.val()
+            if value.get('id')==id and value.get('pw')==pw:
+                return True
+        return False

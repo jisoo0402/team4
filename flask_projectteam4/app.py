@@ -1,6 +1,8 @@
+from base64 import encode
 from flask import Flask, render_template, redirect, url_for, session, request, flash
 from database import DBhandler
 import os
+import hashlib
 
 app = Flask(__name__)
 app.secret_key = "ewhamarket_secret"
@@ -214,12 +216,18 @@ def login():
     if request.method == 'POST':
         user_id = request.form['userid']
         user_pw = request.form['password']
+        pw_hash=hashlib.sha256(user_pw.encode('utf-8')).hexdigest()
 
         if user_id == USER_ID and user_pw == USER_PW:
             session['logged_in'] = True
             session['user_id'] = user_id
             flash('로그인 성공!')
             return redirect(url_for('index'))
+        elif DB.find_user(user_id, pw_hash):
+            session['user_id'] = user_id
+            session['logged_in']=True
+            flash('로그인 성공!')
+            return redirect(url_for('product_list'))
         else:
             flash('아이디 또는 비밀번호가 올바르지 않습니다.')
             return redirect(url_for('login'))
@@ -229,8 +237,46 @@ def login():
 @app.route('/logout')
 def logout():
     session.clear()
-    flash('로그아웃 되었습니다.')
     return redirect(url_for('index'))
+
+# --------------------------------
+# 회원가입
+# --------------------------------
+#회원가입 페이지
+@app.route('/signup')
+def signup():
+    return render_template('signup.html', logged_in=session.get("logged_in", False))
+
+#회원가입 폼 제출
+@app.route('/signup_post', methods=['POST'])
+def register_user():
+    id = request.form.get('text')
+    pw = request.form.get('password')
+    email = request.form.get('email')
+    nickname = request.form.get('nickname')
+    pw_hash=hashlib.sha256(pw.encode('utf-8')).hexdigest()
+
+    data = {
+        'id':id,
+        'pw':pw,
+        'email':email,
+        'nickname':nickname
+    }
+
+    if not all([data["id"], data["email"], data["nickname"], pw]):
+        flash("모든 항목을 입력해주세요.")
+        return redirect('/signup')
+    
+    print("DEBUG form", dict(request.form))
+    ok=DB.insert_user(data, pw_hash)
+    print("DEBUG saved?", ok)
+
+    if ok:
+        flash("회원가입이 완료되었습니다. 로그인하십시오.")
+        return redirect('/login')
+    else:
+        flash("이미 존재하는 아이디입니다.")
+        return redirect('/signup')
 
 # --------------------------------
 # 실행

@@ -27,7 +27,12 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("submit", e => {
   const form = e.target;
   // 상품 등록 / 리뷰 작성은 Flask로 전송해야 하므로 기본 동작 유지
-  if (form.action.includes("/register") || form.action.includes("/review/submit")) {
+  if (form.action.includes("/register") || 
+    form.action.includes("/review/submit") ||
+    form.action.includes("/signup") ||
+    form.action.includes("/singup_post") ||
+    form.action.includes("/login")
+  ) {
     return; // 서버로 전송
   } else {
     e.preventDefault(); // 그 외 페이지는 막기

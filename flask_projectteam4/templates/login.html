@@ -16,6 +16,11 @@
       <label>비밀번호</label>
       <input type="password" name="password" placeholder="비밀번호를 입력해 주세요" required>
 
+      <div class="remember">
+        <input type="checkbox" id="remember" name="remember">
+        <label for="remember">로그인 유지</label>
+      </div>
+
       <button type="submit" class="btn" style="margin-top:15px;">로그인</button>
     </form>
 
@@ -32,6 +37,14 @@
         </div>
       {% endif %}
     {% endwith %}
+  </div>
+
+  <div class="bottom-label">
+    <a>아이디 찾기</a>
+    <span class="pipe">|</span>
+    <a>비밀번호 찾기</a>
+    <span class="pipe">|</span>
+    <a href="/signup">회원가입</a>
   </div>
 
   <script src="{{ url_for('static', filename='main.js') }}"></script>
