@@ -27,7 +27,10 @@
     <p style="margin-top:15px; font-size:14px; color:var(--muted);">
       테스트 계정 → ID: <b>ewha</b> / PW: <b>1234</b>
     </p>
-
+    <p style="margin-top:20px; font-size:14px; text-align:right;">
+      회원이 아니신가요? 
+      <a href="/signup" style="color:var(--accent); font-weight:600;">회원가입하기</a>
+    </p>
     {% with messages = get_flashed_messages() %}
       {% if messages %}
         <div style="margin-top:15px; color:crimson;">

@@ -69,10 +69,24 @@ h2 {
   font-weight: 800;
 }
 
-nav a {
+
+
+nav a,
+nav button {
   color: var(--nav-text);
-  margin-left: 24px;
   font-weight: 500;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease; 
+}
+
+nav a:hover,
+nav button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .btn-dark {
@@ -298,41 +312,15 @@ form.card {
 .form-box .btn {
   width: 100%;
 }
-
-.remember{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  margin-top:8px;
+.page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
 }
 
-.remember input[type="checkbox"]{
-  width:16px;
-  height:16px;
-  accent-color:#00462A;
-}
-
-.bottom-label{
-  margin-top:12px;
-  font-size:14px;
-  display:flex;
-  justify-content: center;
-  align-items:center;
-  gap:10px;
-  color: #a1a1a1;
-}
-
-.bottom-label a:hover{
-  text-decoration: underline;
-}
-
-/* ----------------------------
-   회원가입 폼
------------------------------ */
-.form-box.card p{
-  margin-top:8px;
-  font-size:12px;
-  display:flex;
-  align-items:center;
-  color: #a1a1a1;
+.page-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
