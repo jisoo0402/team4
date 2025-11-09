@@ -274,5 +274,5 @@ def register_user():
 # 실행
 # --------------------------------
 if __name__ == '__main__':
-    print("📂 현재 실행 경로:", os.getcwd())
+    print("현재 실행 경로:", os.getcwd())
     app.run(debug=True)
