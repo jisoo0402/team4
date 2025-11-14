@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, session, request, flash
 import os
 import hashlib
+from database import DBhandler
 
 app = Flask(__name__)
 app.secret_key = "ewhamarket_secret"
