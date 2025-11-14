@@ -169,7 +169,7 @@ textarea {
 ----------------------------- */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
 }
 
@@ -194,6 +194,38 @@ textarea {
   font-weight: 800;
   margin-top: 4px;
 }
+
+/*페이지네이션*/
+.page-nation li{
+  list-style: none;
+}
+.page-wrap{
+  text-align: center;
+  font-size: 0;
+}
+.page-nation{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+.page-nation a{
+  display: block;
+  margin: 0 3px;
+  float: left;
+  border: 1px solid #e6e6e6;
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+  text-align: center;
+  background-color: #fff;
+  font-size: 13px;
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+
 
 /* ----------------------------
    상세 페이지

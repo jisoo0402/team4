@@ -5,38 +5,22 @@ import hashlib
 app = Flask(__name__)
 app.secret_key = "ewhamarket_secret"
 
+DB = DBhandler()
+
+#MASTER ACCOUNT
 USER_ID = "ewha"
 USER_PW = "1234"
 
-# --------------------------------
-# 초기 데이터
-# --------------------------------
 products = []
-reviews = [
-    {
-        "name": "이화인123",
-        "title": "🎀 카페 디저트보다 맛있어요!",
-        "product": "배꽃마들렌 6입 쿠키세트",
-        "rating": "5",
-        "content": "너무 맛있어요! 가족, 지인 선물용으로 샀는데 다들 좋아했어요! 향긋하고 촉촉해서 선물용으로 강추!",
-        "image": "배꽃마들렌.jpg"
-    },
-    {
-        "name": "ewha_shop",
-        "title": "💚 귀여움 한도 초과!",
-        "product": "이화그린5색펜세트",
-        "rating": "4",
-        "content": "실리콘 재질 부드럽고 로고 각인이 예뻐요. 가볍고 포인트 주기 좋아요!",
-        "image": "이화그린5색펜세트.jpg"
-    }
-]
+reviews = []
 
 # --------------------------------
 # 홈
 # --------------------------------
 @app.route('/')
 def index():
-    return render_template('index.html', logged_in=session.get("logged_in", False))
+    # return render_template('index.html', logged_in=session.get("logged_in", False))
+    return redirect(url_for('product_list'))
 
 # --------------------------------
 # 상품 등록
@@ -79,9 +63,56 @@ def product_register():
     return render_template('product_register.html', logged_in=session.get("logged_in", False))
 
 # 상품 목록
+# 2x3 보여주기
 @app.route('/list')
 def product_list():
-    return render_template('product_list.html', products=products, logged_in=session.get("logged_in", False))
+    page = request.args.get("page", 0, type=int)
+    per_page = 6
+    per_row = 3
+
+    # DB에서 상품 전체 가져오기
+    data = DB.get_items()  # dict
+    items = list(data.items())  # 리스트로 변환 ([(key, value), ...])
+
+    item_count = len(items)
+
+    # 페이지 범위 슬라이싱
+    start_idx = page * per_page
+    end_idx = start_idx + per_page
+    page_items = items[start_idx:end_idx]  # 현재 페이지의 item 리스트
+
+    # 2줄로 나누기
+    row1 = page_items[:per_row]
+    row2 = page_items[per_row:per_page]
+
+    # 페이지 수 계산
+    page_count = (item_count - 1) // per_page + 1
+
+    return render_template(
+        'product_list.html',
+        row1=row1,
+        row2=row2,
+        total=item_count,
+        page=page,
+        page_count=page_count
+    )
+
+
+#동적라우팅
+@app.route('/dynamicurl/<varible_name>/')
+def DynamicUrl(varible_name):
+    return str(varible_name)
+
+@app.route('/product_detail/<name>/')
+def view_item_detail(name):
+    print("###name: ", name)
+    data = DB.get_item_byname(str(name))
+    print("###data: ", data)
+    return render_template("product_detail.html", name=name, data=data)
+
+
+
+
 
 # 상품 삭제
 @app.route('/delete/<int:index>', methods=['POST'])
@@ -94,36 +125,10 @@ def delete_product(index):
         flash("해당 상품을 찾을 수 없습니다.")
     return redirect(url_for('product_list'))
 
-# 고정 상세(정적 템플릿 사용)
-@app.route('/detail/pen')
-def detail_pen():
-    return render_template('product_detail_pen.html', logged_in=session.get("logged_in", False))
 
-@app.route('/detail/madeline')
-def detail_madeline():
-    return render_template('product_detail_madeline.html', logged_in=session.get("logged_in", False))
 
-@app.route('/detail/buds')
-def detail_buds():
-    return render_template('product_detail_buds.html', logged_in=session.get("logged_in", False))
 
-@app.route('/detail/jumper')
-def detail_jumper():
-    return render_template('product_detail_jumper.html', logged_in=session.get("logged_in", False))
-
-# 동적 상세(등록 상품용, 이름으로 매칭)
-@app.route('/detail/<item>')
-def product_detail(item):
-    # 먼저 고정 상품 키워드는 위 정적 라우트로 처리되므로 여기서는 등록상품만 탐색
-    for p in products:
-        if p["name"] == item:
-            return render_template('product_detail.html', product=p, logged_in=session.get("logged_in", False))
-    flash("해당 상품을 찾을 수 없습니다.")
-    return redirect(url_for('product_list'))
-
-# --------------------------------
 # 리뷰
-# --------------------------------
 @app.route('/review')
 @app.route('/review/write')
 def review_main():
@@ -172,9 +177,9 @@ def review_detail(index):
 # --------------------------------
 # 회원가입
 # --------------------------------
-@app.route("/signup", methods=["GET"])
-def signup():
-    return render_template("signup.html", logged_in=session.get("logged_in", False))
+# @app.route("/signup", methods=["GET"])
+# def signup():
+#     return render_template("signup.html", logged_in=session.get("logged_in", False))
 
 @app.route("/signup_post", methods=["POST"])
 def signup_post():
@@ -231,3 +236,5 @@ def logout():
 if __name__ == '__main__':
     print("📂 현재 실행 경로:", os.getcwd())
     app.run(debug=True)
+
+
