@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>리뷰 작성 - Ewha Market</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+  {% include 'navbar.html' %}
+  <div class="container fade">
+    <h2>리뷰 작성하기</h2>
+
+    <form class="card" action="/review/submit" method="POST" enctype="multipart/form-data">
+      <label>작성자</label>
+      <input type="text" name="name" placeholder="예: 이화인123" required>
+
+      <label>제목</label>
+      <input type="text" name="title" placeholder="예: 카페 디저트보다 맛있어요!" required>
+
+      <label>상품명</label>
+      <input type="text" name="product" placeholder="예: 배꽃마들렌 6입 쿠키세트" required>
+
+      <label>별점</label>
+      <select name="rating" required>
+        <option value="5">★★★★★</option>
+        <option value="4">★★★★☆</option>
+        <option value="3">★★★☆☆</option>
+        <option value="2">★★☆☆☆</option>
+        <option value="1">★☆☆☆☆</option>
+      </select>
+
+      <label>상품 이미지</label>
+      <input type="file" name="image" accept="image/*">
+
+      <label>리뷰 내용</label>
+      <textarea name="content" placeholder="상품에 대한 솔직한 후기를 작성해주세요." required></textarea>
+
+      <div style="text-align:center; margin-top:20px;">
+        <button type="submit" class="btn">등록하기</button>
+      </div>
+    </form>
+
+    <h2 style="margin-top:50px;">최근 리뷰</h2>
+    {% if reviews and reviews|length > 0 %}
+      {% for r in reviews %}
+      <div class="card review-item" onclick="location.href='/review/detail/{{ loop.index0 }}'">
+        <h3>{{ r.title }}</h3>
+        <p>{{ r.content[:60] }}...</p>
+        <p style="color:var(--muted); font-size:14px;">작성자: {{ r.name }} | 평점: {{ r.rating }}</p>
+      </div>
+      {% endfor %}
+    {% else %}
+      <p>등록된 리뷰가 없습니다.</p>
+    {% endif %}
+
+    <div style="text-align:center; margin-top:30px;">
+      <a href="/review/list" class="btn">더보기</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>리뷰 등록 완료 - Ewha Market</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+  {% include 'navbar.html' %}
+  <div class="container fade">
+    <h2>리뷰가 성공적으로 등록되었습니다 🌿</h2>
+
+    <div class="card">
+      <h3>{{ title }}</h3>
+      <p><strong>작성자:</strong> {{ name }}</p>
+      <p><strong>상품명:</strong> {{ product }}</p>
+      <p><strong>별점:</strong> {{ rating }}점</p>
+      <p>{{ content }}</p>
+    </div>
+
+    <div style="text-align:center; margin-top:25px;">
+      <a href="/review/list" class="btn">리뷰 목록으로 이동</a>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>
