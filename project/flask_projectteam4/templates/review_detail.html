@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>리뷰 상세 - Ewha Market</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+  {% include 'navbar.html' %}
+
+  <div class="container fade">
+    <h2>리뷰 상세</h2>
+
+    {% if review %}
+    <div class="card">
+      <!-- 리뷰 제목 -->
+      <h3>🎀 {{ review.title }}</h3>
+
+      <!-- 리뷰 정보 -->
+      <p style="color: var(--muted); font-size:14px;">
+        작성자: <b>{{ review.name }}</b> · 평점:
+        {% if review.rating == '5' %}★★★★★
+        {% elif review.rating == '4' %}★★★★☆
+        {% elif review.rating == '3' %}★★★☆☆
+        {% elif review.rating == '2' %}★★☆☆☆
+        {% else %}★☆☆☆☆{% endif %}
+      </p>
+
+      <!-- 관련 상품 (리뷰 등록 시 상품명 사용) -->
+      <div style="margin:20px 0;">
+        <h4>📦 관련 상품</h4>
+        <div style="display:flex; align-items:center; gap:20px;">
+          <img src="{{ url_for('static', filename='image/배꽃마들렌.jpg') }}" alt="상품 이미지"
+               style="width:160px; border-radius:8px;">
+          <div>
+            <b>{{ review.product }}</b><br>
+            <span style="color:var(--muted);">₩15,000</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 리뷰 내용 -->
+      <div class="card" style="margin-top:20px;">
+        <h4>리뷰 내용</h4>
+        <p style="white-space: pre-line;">{{ review.content }}</p>
+        <img src="{{ url_for('static', filename='image/배꽃마들렌.jpg') }}"
+             alt="리뷰 이미지"
+             style="width:100%; border-radius:10px; margin-top:10px;">
+      </div>
+
+      <!-- 버튼 -->
+      <div style="margin-top:25px; display:flex; gap:10px;">
+        <button class="btn" onclick="location.href='/review/list'">리뷰 목록으로</button>
+        <button class="btn" style="background-color:var(--accent);" onclick="alert('좋아요를 눌렀습니다!')">❤️ 좋아요</button>
+      </div>
+    </div>
+    {% else %}
+      <p>해당 리뷰를 찾을 수 없습니다.</p>
+    {% endif %}
+  </div>
+
+  <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>
+
