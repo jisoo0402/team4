@@ -1,16 +1,12 @@
 from flask import Flask, render_template, redirect, url_for, session, request, flash
+from database import DBhandler
 import os
 import hashlib
-from database import DBhandler
 
 app = Flask(__name__)
 app.secret_key = "ewhamarket_secret"
 
 DB = DBhandler()
-
-#MASTER ACCOUNT
-USER_ID = "ewha"
-USER_PW = "1234"
 
 products = []
 reviews = []
@@ -178,38 +174,56 @@ def review_detail(index):
 # --------------------------------
 # 회원가입
 # --------------------------------
-# @app.route("/signup", methods=["GET"])
-# def signup():
-#     return render_template("signup.html", logged_in=session.get("logged_in", False))
+@app.route("/signup", methods=["GET"])
+def signup():
+    return render_template("signup.html", logged_in=session.get("logged_in", False))
+
 
 @app.route("/signup_post", methods=["POST"])
 def signup_post():
-    user_id = request.form.get("id","").strip()
-    pw = request.form.get("pw","").strip()
-    nickname = request.form.get("nickname","").strip()
+    user_id = request.form.get("id", "").strip()
+    pw = request.form.get("pw", "").strip()
+    email = request.form.get("email", "").strip()
+    nickname = request.form.get("nickname", "").strip()
 
-    if not user_id or not pw or not nickname:
-        flash("필수 항목을 모두 입력하세요.")
+    if not all([user_id, pw, email, nickname]):
+        flash("모든 항목을 입력해주세요.")
         return redirect(url_for("signup"))
 
     pw_hash = hashlib.sha256(pw.encode("utf-8")).hexdigest()
-    print(f"[회원가입] id={user_id}, nickname={nickname}, pw_hash={pw_hash[:10]}...")
 
-    flash("회원가입 완료! 로그인해주세요.")
-    return redirect(url_for("login"))
+    data = {
+        "id": user_id,
+        "pw": pw_hash,
+        "email": email,
+        "nickname": nickname
+    }
 
-# --------------------------------
-# 로그인 / 로그아웃
-# --------------------------------
-@app.route('/login', methods=['GET', 'POST'])
+    ok = DB.insert_user(data, pw_hash)
+
+    if ok:
+        flash("회원가입이 완료되었습니다. 로그인해 주세요.")
+        return redirect(url_for("login"))
+    else:
+        flash("이미 존재하는 아이디입니다.")
+        return redirect(url_for("signup"))
+
+
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == 'POST':
-        user_id = request.form.get('userid', '')
-        user_pw = request.form.get('password', '')
+    if request.method == "POST":
+        user_id = request.form.get("userid", "").strip()
+        pw = request.form.get("password", "").strip()
+        remember = request.form.get("remember")
 
-        if user_id == USER_ID and user_pw == USER_PW:
-            session['logged_in'] = True
-            session['user_id'] = user_id
+        pw_hash = hashlib.sha256(pw.encode("utf-8")).hexdigest()
+
+        if DB.find_user(user_id, pw_hash):
+            session["logged_in"] = True
+            session["user_id"] = user_id
+            if remember:
+                session.permanent = True
+
             return """
                 <script>
                   alert('로그인 성공! 환영합니다 🌿');
@@ -223,19 +237,20 @@ def login():
                   window.location.href = '/login';
                 </script>
             """
-    return render_template('login.html', logged_in=session.get("logged_in", False))
 
-@app.route('/logout')
+    return render_template("login.html", logged_in=session.get("logged_in", False))
+
+
+@app.route("/logout")
 def logout():
     session.clear()
-    flash('로그아웃 되었습니다.')
-    return redirect(url_for('index'))
+    flash("로그아웃 되었습니다.")
+    return redirect(url_for("index"))
 
-# --------------------------------
-# 실행
-# --------------------------------
-if __name__ == '__main__':
-    print("📂 현재 실행 경로:", os.getcwd())
+
+if __name__ == "__main__":
+    print("현재 실행 경로:", os.getcwd())
     app.run(debug=True)
+
 
 
