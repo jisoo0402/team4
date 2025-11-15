@@ -11,6 +11,14 @@
     <div class="logo">Ewha<br>Market</div>
     <nav>
       <a href="/">홈</a>
+
+      {% if logged_in %}
+        <a href="/logout">로그아웃</a>
+        <span style="color:var(--nav-text); font-weight:600;">{{ user }}님</span>
+      {% else %}
+        <a href="/login">로그인</a>
+      {% endif %}
+
       <button id="darkToggle" class="btn-dark">다크 모드</button>
     </nav>
   </header>
@@ -25,27 +33,25 @@
   </div>
 </div>
 
+<script>
+  function applyTheme(theme) {
+    document.body.setAttribute("data-theme", theme);
+    const btn = document.getElementById("darkToggle");
+    if (btn) btn.textContent = theme === "dark" ? "라이트 모드" : "다크 모드";
+  }
 
-  <script>
-    // 다크모드 스크립트
-    function applyTheme(theme) {
-      document.body.setAttribute("data-theme", theme);
-      const btn = document.getElementById("darkToggle");
-      if (btn) btn.textContent = theme === "dark" ? "라이트 모드" : "다크 모드";
-    }
+  function toggleTheme() {
+    const theme = document.body.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    localStorage.setItem("theme", theme);
+    applyTheme(theme);
+  }
 
-    function toggleTheme() {
-      const theme = document.body.getAttribute("data-theme") === "dark" ? "light" : "dark";
-      localStorage.setItem("theme", theme);
-      applyTheme(theme);
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      const saved = localStorage.getItem("theme") || "light";
-      applyTheme(saved);
-      const btn = document.getElementById("darkToggle");
-      if (btn) btn.addEventListener("click", toggleTheme);
-    });
-  </script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const saved = localStorage.getItem("theme") || "light";
+    applyTheme(saved);
+    const btn = document.getElementById("darkToggle");
+    if (btn) btn.addEventListener("click", toggleTheme);
+  });
+</script>
 </body>
 </html>
