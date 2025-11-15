@@ -42,18 +42,17 @@
       {% endfor %}
     {% endfor %}
     </section>
-    <!--페이지네이션-->
-    <div class="page-wrap">
-      <div class="page-nation">
-        <ul>
-          <li>
-            {%for i in range(page_count)%}
-              <a href="{{url_for('product_list', page=i)}}" color="black">{{i}}</a>
-            {%endfor%} 
-          </li>
-        </ul>  
-      </div>
-    </div>     
+    <!-- 페이지네이션 -->
+  <div class="pagination">
+    {% for i in range(page_count) %}
+      {% if i == page %}
+      <span class="page active">{{ i }}</span>
+    {% else %}
+      <a href="{{ url_for('product_list', page=i) }}" class="page">{{ i }}</a>
+    {% endif %}
+  {% endfor %}
+</div>
+  
       
   </div>
   {%else%}

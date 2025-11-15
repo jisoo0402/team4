@@ -7,28 +7,37 @@
 </head>
 <body>
   {% include 'navbar.html' %}
+
   <div class="form-box card fade">
     <h2>로그인</h2>
+
     <form method="POST" action="/login">
       <label>아이디</label>
       <input type="text" name="userid" placeholder="아이디를 입력해 주세요" required>
 
-      <label>비밀번호</label>
+      <label style="margin-top:10px;">비밀번호</label>
       <input type="password" name="password" placeholder="비밀번호를 입력해 주세요" required>
 
-      <button type="submit" class="btn" style="margin-top:15px;">로그인</button>
-    </form>
+      <div class="remember" style="margin-top:10px; display:flex; align-items:center; gap:6px; font-size:13px;">
+        <input type="checkbox" id="remember" name="remember" style="width:auto;">
+        <label for="remember" style="margin:0;">로그인 유지</label>
+      </div>
 
-    <p style="margin-top:15px; font-size:14px; color:var(--muted);">
-      테스트 계정 → ID: <b>ewha</b> / PW: <b>1234</b>
-    </p>
-    <p style="margin-top:20px; font-size:14px; text-align:right;">
-      회원이 아니신가요? 
-      <a href="/signup" style="color:var(--accent); font-weight:600;">회원가입하기</a>
-    </p>
+      <button type="submit" class="btn" style="margin-top:20px; width:100%;">로그인</button>
+    </form>
+    <div style="margin-top:18px; font-size:13px; text-align:center; color:var(--muted);">
+      <span style="cursor:pointer;">아이디 찾기</span>
+      <span class="pipe" style="margin:0 6px; color:#ccc;">|</span>
+      <span style="cursor:pointer;">비밀번호 찾기</span>
+      <span class="pipe" style="margin:0 6px; color:#ccc;">|</span>
+      <a href="/signup" style="color:var(--accent); font-weight:600; text-decoration:none;">
+        회원가입
+      </a>
+    </div>
+
     {% with messages = get_flashed_messages() %}
       {% if messages %}
-        <div style="margin-top:15px; color:crimson;">
+        <div style="margin-top:16px; font-size:13px; color:crimson; text-align:center;">
           {% for msg in messages %}
             {{ msg }}<br>
           {% endfor %}
