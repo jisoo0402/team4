@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
 if (!window.__EWHA_MAIN_JS_LOADED__) {
   window.__EWHA_MAIN_JS_LOADED__ = true;
 
-  // ✅ 폼 제출 처리
+  // 폼 제출 처리
   document.addEventListener("submit", e => {
     const form = e.target;
     const path = window.location.pathname.toLowerCase();
