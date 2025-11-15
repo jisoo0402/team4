@@ -48,6 +48,15 @@
       {% endif %}
     </div>
   </div>
+<div class="pagination" style="margin-top: 30px;">
+  {% for i in range(page_count) %}
+    {% if i == page %}
+      <span class="page active">{{ i }}</span>
+    {% else %}
+      <a href="{{ url_for('review_list', page=i) }}" class="page">{{ i }}</a>
+    {% endif %}
+  {% endfor %}
+</div>
 
   <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>

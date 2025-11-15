@@ -14,7 +14,7 @@
 
       {% if logged_in %}
         <a href="/logout">로그아웃</a>
-        <span style="color:var(--nav-text); font-weight:600;">{{ user }}님</span>
+        <span style="color:var(--nav-text); font-weight:600;">{{ nickname }}님</span>
       {% else %}
         <a href="/login">로그인</a>
       {% endif %}
