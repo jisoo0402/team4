@@ -44,11 +44,12 @@
     </section>
     <!-- 페이지네이션 -->
   <div class="pagination">
-    {% for i in range(page_count) %}
-      {% if i == page %}
-      <span class="page active">{{ i }}</span>
+  {% for i in range(page_count) %}
+    {% set page_num = i + 1 %}
+    {% if i == page %}
+      <span class="page active">{{ page_num }}</span>
     {% else %}
-      <a href="{{ url_for('product_list', page=i) }}" class="page">{{ i }}</a>
+      <a href="{{ url_for('product_list', page=i) }}" class="page">{{ page_num }}</a>
     {% endif %}
   {% endfor %}
 </div>
