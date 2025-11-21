@@ -97,6 +97,16 @@ def product_list():
 def view_item_detail(name):
     data = DB.get_item_byname(str(name))
     return render_template("product_detail.html", name=name, data=data, logged_in=session.get("logged_in", False), nickname=session.get("nickname", ""))
+@app.route('/reg_review_init/<product_name>/')
+def reg_review_init(product_name):
+    recent = reviews[-3:][::-1]
+    return render_template(
+        'review_write.html',
+        reviews=recent,
+        logged_in=session.get("logged_in", False),
+        nickname=session.get("nickname", ""),  # 작성자(로그인한 사람)
+        product_name=product_name              # 상품명 (URL로 받은 거)
+    )
 
 @app.route('/show_heart/<name>/', methods=['GET'])
 def show_heart(name):
@@ -126,7 +136,15 @@ def delete_product(index):
 @app.route('/review/write')
 def review_main():
     recent = reviews[-3:][::-1]
-    return render_template('review_write.html', reviews=recent, logged_in=session.get("logged_in", False), nickname=session.get("nickname", ""))
+    return render_template(
+        'review_write.html',
+        reviews=recent,
+        logged_in=session.get("logged_in", False),
+        nickname=session.get("nickname", ""),
+        product_name=""
+    )
+
+
 
 @app.route('/review/submit', methods=['POST'])
 def review_submit():
@@ -155,6 +173,7 @@ def review_submit():
 
     flash("리뷰가 등록되었습니다!")
     return redirect(url_for('review_main'))
+
 
 @app.route('/review/list')
 def review_list():

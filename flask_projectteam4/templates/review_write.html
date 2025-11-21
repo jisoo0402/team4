@@ -13,13 +13,16 @@
 
     <form class="card" action="/review/submit" method="POST" enctype="multipart/form-data">
       <label>작성자</label>
-      <input type="text" name="name" placeholder="예: 이화인123" required>
+      <input type="text" name="name" placeholder="예: 이화인123"
+             value="{{ nickname or '' }}" required>
 
       <label>제목</label>
       <input type="text" name="title" placeholder="예: 카페 디저트보다 맛있어요!" required>
 
       <label>상품명</label>
-      <input type="text" name="product" placeholder="예: 배꽃마들렌 6입 쿠키세트" required>
+      <input type="text" name="product"
+             placeholder="예: 배꽃마들렌 6입 쿠키세트"
+             value="{{ product_name or '' }}" required>
 
       <label>별점</label>
       <select name="rating" required>
@@ -58,5 +61,7 @@
       <a href="/review/list" class="btn">더보기</a>
     </div>
   </div>
+
+  <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>
