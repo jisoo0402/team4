@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, session, request, flash
+from flask import Flask, render_template, redirect, url_for, session, request, flash, jsonify
 from database import DBhandler
 import os
 import hashlib
@@ -97,6 +97,21 @@ def product_list():
 def view_item_detail(name):
     data = DB.get_item_byname(str(name))
     return render_template("product_detail.html", name=name, data=data, logged_in=session.get("logged_in", False), nickname=session.get("nickname", ""))
+
+@app.route('/show_heart/<name>/', methods=['GET'])
+def show_heart(name):
+    my_heart = DB.get_heart_byname(session['user_id'], name)
+    return jsonify({'my_heart': my_heart})
+
+@app.route('/like/<name>/', methods=['POST'])
+def like(name):
+    my_heart = DB.update_heart(session['user_id'], 'Y', name)
+    return jsonify({'msg': '좋아요 완료!'})
+
+@app.route('/unlike/<name>/', methods=['POST'])
+def unlike(name):
+    my_heart = DB.update_heart(session['user_id'], 'N', name)
+    return jsonify({'msg': '좋아요 취소!'})
 
 @app.route('/delete/<int:index>', methods=['POST'])
 def delete_product(index):

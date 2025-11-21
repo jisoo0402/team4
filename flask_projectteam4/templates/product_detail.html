@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>{{ name }} - Ewha Market</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
   {% include 'navbar.html' %}
@@ -18,7 +19,10 @@
 
       <!-- 상품 정보 -->
       <div>
-        <h2>{{ name }}</h2>
+        <h2>
+          {{ name }}
+          <i class="fa fa-heart" id="heart"></i>
+        </h2>
 
         <p style="font-size:20px; font-weight:700;">
           ₩{{ data.price }}
@@ -60,6 +64,65 @@
       </div>
     </div>
   </div>
+  
+<!-- 하트상태조회(좋아요클릭) -->
+
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  
+  <script>
+
+    function showHeart() {
+      $.ajax({
+        type: 'Get',
+        url: '/show_heart/{{name}}/',
+        data: {},
+        success: function(response) {
+          let my_heart = response['my_heart'];
+
+          if (my_heart['interested'] == 'Y') {
+            $("#heart").css("color", "red");
+            $("#heart").attr("onclick", "unlike()");
+          } else {
+            $("#heart").css("color", "grey");
+            $("#heart").attr("onclick", "like()");
+          }
+        }
+      });
+    }
+
+    function like() {
+      $.ajax({
+        type: 'POST',
+         url: '/like/{{name}}/',
+        data: {
+          interested: "Y"
+        },
+        success: function(response) {
+          alert(response['msg']);
+          window.location.reload();
+        }
+      });
+    }
+
+    function unlike() {
+      $.ajax({
+        type: 'POST',
+        url: '/unlike/{{name}}/',
+        data: {
+          interested: "N"
+        },
+        success: function(response) {
+          alert(response['msg']);
+          window.location.reload();
+        }
+      });
+    }
+
+    $(document).ready(function () {
+      showHeart();
+    });
+
+  </script>
 
   <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>

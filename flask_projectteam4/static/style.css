@@ -241,7 +241,7 @@ input[type="file"] {
 }
 
 /* ----------------------------
-   상세 페이지
+   상세 페이지 (좋아요 기능 구현 완료)
 ----------------------------- */
 .detail {
   display: grid;
@@ -252,6 +252,15 @@ input[type="file"] {
 
 .detail h2 {
   margin-top: 0;
+}
+
+#heart {
+  color: grey;
+  font-size: 30px;
+}
+
+#heart.red {
+  color:red;
 }
 
 /* ----------------------------
