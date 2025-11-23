@@ -12,24 +12,24 @@ USER_ID = "ewha"
 USER_PW = "1234"
 
 products = []
-reviews = [
-    {
-        "name": "이화인123",
-        "title": "🎀 카페 디저트보다 맛있어요!",
-        "product": "배꽃마들렌 6입 쿠키세트",
-        "rating": "5",
-        "content": "너무 맛있어요! 가족, 지인 선물용으로 샀는데 다들 좋아했어요! 향긋하고 촉촉해서 선물용으로 강추!",
-        "image": "배꽃마들렌.jpg"
-    },
-    {
-        "name": "ewha_shop",
-        "title": "💚 귀여움 한도 초과!",
-        "product": "이화그린5색펜세트",
-        "rating": "4",
-        "content": "실리콘 재질 부드럽고 로고 각인이 예뻐요. 가볍고 포인트 주기 좋아요!",
-        "image": "이화그린5색펜세트.jpg"
-    }
-]
+# reviews = [
+#     {
+#         "name": "이화인123",
+#         "title": "🎀 카페 디저트보다 맛있어요!",
+#         "product": "배꽃마들렌 6입 쿠키세트",
+#         "rating": "5",
+#         "content": "너무 맛있어요! 가족, 지인 선물용으로 샀는데 다들 좋아했어요! 향긋하고 촉촉해서 선물용으로 강추!",
+#         "image": "배꽃마들렌.jpg"
+#     },
+#     {
+#         "name": "ewha_shop",
+#         "title": "💚 귀여움 한도 초과!",
+#         "product": "이화그린5색펜세트",
+#         "rating": "4",
+#         "content": "실리콘 재질 부드럽고 로고 각인이 예뻐요. 가볍고 포인트 주기 좋아요!",
+#         "image": "이화그린5색펜세트.jpg"
+#     }
+# ]
 
 @app.route('/')
 def index():
@@ -97,9 +97,12 @@ def product_list():
 def view_item_detail(name):
     data = DB.get_item_byname(str(name))
     return render_template("product_detail.html", name=name, data=data, logged_in=session.get("logged_in", False), nickname=session.get("nickname", ""))
+
 @app.route('/reg_review_init/<product_name>/')
 def reg_review_init(product_name):
-    recent = reviews[-3:][::-1]
+    all_reviews = DB.get_reviews()
+    sorted_reviews=all_reviews[::-1]
+    recent = sorted_reviews[:3]
     return render_template(
         'review_write.html',
         reviews=recent,
@@ -135,7 +138,9 @@ def delete_product(index):
 @app.route('/review')
 @app.route('/review/write')
 def review_main():
-    recent = reviews[-3:][::-1]
+    all_reviews=DB.get_reviews()
+    sorted_reviews=all_reviews[::-1]
+    recent = sorted_reviews[:3]
     return render_template(
         'review_write.html',
         reviews=recent,
@@ -148,11 +153,7 @@ def review_main():
 
 @app.route('/review/submit', methods=['POST'])
 def review_submit():
-    name = request.form.get('name')
-    title = request.form.get('title')
-    product = request.form.get('product')
-    rating = request.form.get('rating')
-    content = request.form.get('content')
+    data = request.form
     image = request.files.get('image')
 
     image_filename = None
@@ -160,16 +161,10 @@ def review_submit():
         image_filename = image.filename
         save_dir = os.path.join('static', 'image')
         os.makedirs(save_dir, exist_ok=True)
-        image.save(os.path.join(save_dir, image_filename))
+        image_path = os.path.join(save_dir, image_filename)
+        image.save(image_path)
 
-    reviews.append({
-        "name": name,
-        "title": title,
-        "product": product,
-        "rating": rating,
-        "content": content,
-        "image": image_filename
-    })
+    DB.reg_review(data, image_filename)
 
     flash("리뷰가 등록되었습니다!")
     return redirect(url_for('review_main'))
@@ -180,9 +175,10 @@ def review_list():
     page = request.args.get("page", 0, type=int)  # 현재 페이지 번호
     per_page = 6  # 한 페이지에 보여줄 리뷰 개수
 
-    total_reviews = len(reviews)
+    all_reviews=DB.get_reviews()
+    total_reviews = len(all_reviews)
     # 최신순 정렬 후 페이지 슬라이싱
-    sorted_reviews = reviews[::-1]
+    sorted_reviews = all_reviews[::-1]
     start = page * per_page
     end = start + per_page
     paged_reviews = sorted_reviews[start:end]
@@ -201,8 +197,20 @@ def review_list():
 
 @app.route('/review/detail/<int:index>')
 def review_detail(index):
-    if 0 <= index < len(reviews):
-        return render_template('review_detail.html', review=reviews[index], logged_in=session.get("logged_in", False), nickname=session.get("nickname", ""))
+    all_reviews=DB.get_reviews()
+    sorted_reviews = all_reviews[::-1]
+    total = len(all_reviews)
+
+    if 0 <= index < len(all_reviews):
+        review = sorted_reviews[index]
+        recent = sorted_reviews[:3]
+        return render_template(
+            'review_detail.html', 
+            review=review, 
+            reviews=recent,
+            logged_in=session.get("logged_in", False), 
+            nickname=session.get("nickname", "")
+        )
     flash("해당 리뷰를 찾을 수 없습니다.")
     return redirect(url_for('review_list'))
 

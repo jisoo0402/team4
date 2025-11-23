@@ -8,42 +8,70 @@
 
 <body>
   {% include 'navbar.html' %}
-  <div class="container fade">
-    <h2>리뷰 작성하기</h2>
+  <div class="container fade" style="margin-top:20px;">
+    <div class="card" style="padding:30px 40px; border-radius:12px;">
+      <h2 style="margin:10px; font-size:30px; font-weight:700;">
+        {{ review.title }}
+      </h2>
 
-    <form class="card" action="/review/submit" method="POST" enctype="multipart/form-data">
-      <label>작성자</label>
-      <input type="text" name="name" placeholder="예: 이화인123"
-             value="{{ nickname or '' }}" required>
+      <p style="margin:15px; color:var(--muted); font-size:15px;">
+        작성자: {{ review.name }}
+        &nbsp; | &nbsp;
+        평점:
+        {% if review.rating == '5' %} ★★★★★
+        {% elif review.rating == '4' %} ★★★★☆
+        {% elif review.rating == '3' %} ★★★☆☆
+        {% elif review.rating == '2' %} ★★☆☆☆
+        {% else %}★☆☆☆☆{% endif %}
+      </p>
 
-      <label>제목</label>
-      <input type="text" name="title" placeholder="예: 카페 디저트보다 맛있어요!" required>
+      <h3 style="font-size:20px; margin:10px;">관련 상품</h3>
 
-      <label>상품명</label>
-      <input type="text" name="product"
-             placeholder="예: 배꽃마들렌 6입 쿠키세트"
-             value="{{ product_name or '' }}" required>
+      {% set img = review.image or review.img_path %}
+      <div style="display:flex; gap:20px; align-items:flex-start; margin:30px;">
+        <div>
+          {% if img %}
+          <img src="{{ url_for('static', filename='image/' + img) }}"
+            style="width:100%; height:250px; object-fit:cover;">
+          {% else %}
+          <div style="width:100%; height:200px; background:#a1a1a1;
+            display:flex; align-items:center; justify-content:center; color:#aaa;"></div>
+          {% endif %}
+        </div>
 
-      <label>별점</label>
-      <select name="rating" required>
-        <option value="5">★★★★★</option>
-        <option value="4">★★★★☆</option>
-        <option value="3">★★★☆☆</option>
-        <option value="2">★★☆☆☆</option>
-        <option value="1">★☆☆☆☆</option>
-      </select>
-
-      <label>상품 이미지</label>
-      <input type="file" name="image" accept="image/*">
-
-      <label>리뷰 내용</label>
-      <textarea name="content" placeholder="상품에 대한 솔직한 후기를 작성해주세요." required></textarea>
-
-      <div style="text-align:center; margin-top:20px;">
-        <button type="submit" class="btn">등록하기</button>
+        <div style="flex:1; padding:10px;">
+          <p style="margin:5px; font-weight:600; font-size:30px;">
+            {{ review.product }}
+          </p>
+        </div>
       </div>
-    </form>
 
+      <div class="card">
+        <h3 style="font-size:20px; margin:10px;">리뷰 내용</h3>
+        <div style="margin:20px; padding:20px solid; display:flex; align-items:flex-start;">
+
+          <div style="flex:1;">
+            <p style="font-size:15px; margin:0 25px 25px 5px;">
+              {{ review.content }}
+            </p>
+          </div>
+
+          {% if img %}
+          <div>
+            <img src="{{ url_for('static', filename='image/' + img) }}"
+              style="width:100%; height:200px;">
+          </div>
+          {% endif %}
+        </div>
+
+        <div style="margin:25px; display:flex; gap:30px;">
+          <a href="{{ url_for('review_list') }}" class="btn">리뷰 목록으로</a>
+          <button type="button" class="btn" onclick="">좋아요</button>
+        </div>
+
+      </div>
+
+    </div> 
     <h2 style="margin-top:50px;">최근 리뷰</h2>
     {% if reviews and reviews|length > 0 %}
       {% for r in reviews %}
@@ -56,12 +84,7 @@
     {% else %}
       <p>등록된 리뷰가 없습니다.</p>
     {% endif %}
-
-    <div style="text-align:center; margin-top:30px;">
-      <a href="/review/list" class="btn">더보기</a>
-    </div>
   </div>
-
   <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>

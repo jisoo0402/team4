@@ -116,4 +116,28 @@ class DBhandler:
             "interested": isHeart
         }
         self.db.child("heart").child(user_id).child(item).set(heart_info)
-        return True       
+        return True     
+
+    def reg_review(self, data, img_filename):
+        review_info = {
+            "name" : data['name'],
+            "title" : data['title'],
+            "product" : data['product'],
+            "rating" : data['rating'],
+            "content" : data['content'],
+            "image" : img_filename or ""
+        }
+        self.db.child("review").push(review_info)
+        return True
+    
+    def get_reviews(self):
+        snapshot=self.db.child("review").get()
+        if not snapshot.val():
+            return []
+        
+        reviews=[]
+        for res in snapshot.each():
+            value=res.val()
+            value['key']=res.key()
+            reviews.append(value)
+        return reviews

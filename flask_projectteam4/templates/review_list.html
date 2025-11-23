@@ -22,8 +22,8 @@
 
     <div class="review-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap:25px; margin-top:20px;">
       {% if reviews and reviews|length > 0 %}
-        {% for r in reviews|reverse %}
-        <div class="card review-item" onclick="location.href='/review/detail/{{ loop.index0 }}'"
+        {% for r in reviews %}
+        <div class="card review-item" onclick="location.href='/review/detail/{{ (page * 6) + loop.index0 }}'"
              style="cursor:pointer; padding:15px; border-radius:10px; display:flex; flex-direction:column; gap:12px;">
           {% if r.image %}
           <img src="{{ url_for('static', filename='image/' + r.image) }}"
@@ -51,13 +51,13 @@
 <div class="pagination" style="margin-top: 30px;">
   {% for i in range(page_count) %}
     {% if i == page %}
-      <span class="page active">{{ i }}</span>
+      <span class="page active">{{ i+1 }}</span>
     {% else %}
-      <a href="{{ url_for('review_list', page=i) }}" class="page">{{ i }}</a>
+      <a href="{{ url_for('review_list', page=i) }}" class="page">{{ i+1 }}</a>
     {% endif %}
   {% endfor %}
 </div>
-
+s
   <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>
