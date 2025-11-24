@@ -77,7 +77,20 @@ def product_register():
 def product_list():
     data = DB.get_items()
     items = list(data.items())
-    item_count = len(items)
+
+    user = session.get("user_id", None)
+
+    # 좋아요 여부 상품에 추가
+    enriched_items = []
+    for name, info in items:
+        heart = DB.get_heart_byname(user, name)
+
+        info = info.copy()
+        info["liked"] = (heart and heart.get("interested") == "Y")
+
+        enriched_items.append((name, info))
+
+    item_count = len(enriched_items)
 
     page = request.args.get("page", 0, type=int)
     per_page = 6
@@ -85,14 +98,22 @@ def product_list():
 
     start_idx = page * per_page
     end_idx = start_idx + per_page
-    page_items = items[start_idx:end_idx]
+    page_items = enriched_items[start_idx:end_idx]
 
     row1 = page_items[:per_row]
     row2 = page_items[per_row:per_page]
     page_count = (item_count - 1) // per_page + 1
 
-    return render_template('product_list.html', row1=row1, row2=row2, total=item_count, page=page, page_count=page_count, logged_in=session.get("logged_in", False), nickname=session.get("nickname", ""))
-
+    return render_template(
+        'product_list.html',
+        row1=row1,
+        row2=row2,
+        total=item_count,
+        page=page,
+        page_count=page_count,
+        logged_in=session.get("logged_in", False),
+        nickname=session.get("nickname", "")
+    )
 @app.route('/product_detail/<name>/')
 def view_item_detail(name):
     data = DB.get_item_byname(str(name))
@@ -284,6 +305,28 @@ def logout():
     session.clear()
     flash("로그아웃 되었습니다.")
     return redirect(url_for("index"))
+
+@app.route('/toggle_like/<name>', methods=['POST'])
+def toggle_like(name):
+    user = session.get('user_id', None)
+    if not user:
+        return jsonify({'msg': '로그인이 필요합니다.'}), 403
+
+    heart = DB.get_heart_byname(user, name)
+
+    # 최초 좋아요 → 생성
+    if not heart:
+        DB.update_heart(user, 'Y', name)
+        return jsonify({'msg': '좋아요 완료!'})
+
+    # 이미 좋아요 상태라면 취소
+    if heart.get('interested') == 'Y':
+        DB.update_heart(user, 'N', name)
+        return jsonify({'msg': '좋아요 취소!'})
+
+    # 좋아요가 N → Y 로 변경
+    DB.update_heart(user, 'Y', name)
+    return jsonify({'msg': '좋아요 완료!'})
 
 if __name__ == '__main__':
     print("현재 실행 경로:", os.getcwd())

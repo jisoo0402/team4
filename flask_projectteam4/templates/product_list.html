@@ -5,6 +5,7 @@
   
   <title>상품 조회 - Ewha Market</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -30,7 +31,16 @@
 
           <img src="{{ url_for('static', filename='image/' ~ value.image) }}" width="140" height="200">
 
-          <div class="name">{{ value.name }}</div>
+         <div class="name" style="display:flex; align-items:center; gap:6px;">
+            {{ value.name }}
+            {% if value.liked %}
+              <i class="fa fa-heart" style="color:red; cursor:pointer;"
+                onclick="event.stopPropagation(); toggleLike('{{ value.name }}')"></i>
+            {% else %}
+              <i class="fa fa-heart" style="color:grey; cursor:pointer;"
+                  onclick="event.stopPropagation(); toggleLike('{{ value.name }}')"></i>
+            {% endif %}
+         </div>
           <div class="price">₩{{ value.price }}</div>
           <p style="font-size:13px; color:var(--muted);">
             판매자: {{ value.seller }}<br>
@@ -58,9 +68,24 @@
   </div>
   {%else%}
     <p> 등록된 상품이 없습니다. </p>
-  {%endif%}'
+  {%endif%}
 
-  <script src="{{ url_for('static', filename='main.js') }}"></script>
+<script>
+  function toggleLike(name) {
+    fetch(`/toggle_like/${name}`, { method: "POST" })
+      .then(() => location.reload());
+  }
+</script>
+
+<script>
+  window.addEventListener("pageshow", function(event) {
+    if (event.persisted) {
+        window.location.reload();
+    }
+  });
+</script>
+
+<script src="{{ url_for('static', filename='main.js') }}"></script> 
 </body>
 </html>
 
