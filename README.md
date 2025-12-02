@@ -11,14 +11,13 @@ Backend: Flask, Python <br>
 Database: Firebase <br>
 
 ## 디렉토리 구조
-flask_projectteam4
- ┣ authentication     # Firebase Authentication 및 Realtime Database 연동
- ┣ static             # 정적 파일 (CSS, JavaScript, 이미지)
- ┣ templates          # HTML 템플릿 파일
- ┣ app.py             # 애플리케이션 실행 진입점 
- ┣ database.py        # 데이터베이스 연결 및 모델 정의
- ┗ README.md          # 프로젝트 설명 문서
-
+flask_projectteam4/
+├── authentication/      # Firebase Authentication 및 Realtime Database 연동
+├── static/              # 정적 파일 (CSS, JavaScript, 이미지)
+├── templates/           # HTML 템플릿 파일
+├── app.py               # 애플리케이션 실행 진입점
+├── database.py          # 데이터베이스 연결 및 모델 정의
+└── README.md            # 프로젝트 설명 문서
  
 ## 기술블로그
 https://pond-columnist-7a2.notion.site/2b58abf89971819b9878e7e2c01ef61d?source=copy_link
