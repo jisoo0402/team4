@@ -5,10 +5,11 @@
 팀장: 하지수
 팀원: 임예원, 김영민, 하희서, 박혜린
 
-## 개발 환경
-Frontend: HTML, CSS, JavaScript <br>
-Backend: Flask, Python <br>
-Database: Firebase <br>
+## 개발 환경 및 오픈 SW
+* IDE: Visual Studio Code
+* Frontend: HTML, CSS, JavaScript <br>
+* Backend: Flask, Python <br>
+* Database: Firebase <br>
 
 ## 디렉토리 구조
 flask_projectteam4/ <br>
