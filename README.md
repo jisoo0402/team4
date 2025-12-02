@@ -1,9 +1,9 @@
 # OpenSWPlatform Project
 25-2 오픈SW플랫폼 팀프로젝트 4조 (팀명: 이화사이)
 
-프로젝트명: Ewha Market
-팀장: 하지수
-팀원: 임예원, 김영민, 하희서, 박혜린
+프로젝트명: Ewha Market<br>
+팀장: 하지수<br>
+팀원: 임예원, 김영민, 하희서, 박혜린<br>
 
 ## 개발 환경 및 오픈 SW
 * IDE: Visual Studio Code
